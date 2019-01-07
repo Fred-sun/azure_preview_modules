@@ -20,26 +20,6 @@ env:
     - id=8
     - id=9
     - id=10
-    - id=11
-    - id=12
-    - id=13
-    - id=14
-    - id=15
-    - id=16
-    - id=17
-    - id=18
-    - id=19
-    - id=20
-    - id=21
-    - id=22
-    - id=23
-    - id=24
-    - id=25
-    - id=26
-    - id=27
-    - id=28
-    - id=29
-    - id=30
 
 before_install:
   - sudo apt-get update -qq
@@ -111,12 +91,13 @@ before_install:
         fi
       done;
 
-      echo =============================
       echo run_all is $run_all;
+      echo start = $start, end = $end, list_lenth = ${#listall[@]};
+      
       if [ "$run_all" == true ]; then
         listfiles=tests/integration/targets/azure_rm_*/tasks/main.yml;
         listall=($listfiles);
-        echo start = $start, end = $end, list_lenth = ${#listall[@]};
+        
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#listall[@]}" ]; then
             run_test ${listall[$i]};
@@ -126,16 +107,16 @@ before_install:
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#list[@]}" ]; then
             for alias in ${list[*]}; do
-              echo alias is $alias;
               for changedfile in ${diffstr[*]}; do
                 arrChanged=(${changedfile//// });
                 changedFileName=${arrChanged[-1]};
-                echo changedFileName is $changedFileName;
                 if grep -Fxq "$changedFileName" "${alias}/aliases"; then
-                  echo run file $changedFileName;
+                  echo run file $changefile;
                   break;
                 elif [ "$changedfile" == "main.yml" ]; then
                   echo "changed main.yml, run them later";
+                else
+                  echo not found in alias file $changedFileName $alias
                 fi
               done;
             done;
