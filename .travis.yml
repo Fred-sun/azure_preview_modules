@@ -115,32 +115,31 @@ before_install:
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#list[@]}" ]; then
             run_test ${list[$i]};
+          fi;
+        done;
+      else
+        for (( i = $start; i < $end; i++ )); do
+          if [ "$i" -lt "${#list[@]}" ]; then
+            for alias in ${list[*]}; do
+              for changedfile in "${diffstr[*]}"; do
+                if grep -Fxq "$changedfile" "${alias}/aliases"; then
+                  run_test "$alias/tasks/main.yml"
+                elif [ "$changedfile" == "main.yml" ]; then
+                  echo "changed main.yml, run them later"
+                fi;
+              done;
+            done;
+          fi;
+        done;
+
+        diffmainymlstr=$(git diff $branch remotes/origin/master --name-only  -- 'main.yml' --no-pager);
+        echo start = $start, end = $end, list_lenth = ${#diffmainymlstr[@]};
+        for (( i = $start; i < $end; i++ )); do
+          if [ "$i" -lt "${#diffmainymlstr[@]}" ]; then
+            run_test ${diffmainymlstr[$i]};
           fi
         done;
       fi;
-      return;
-
-      for (( i = $start; i < $end; i++ )); do
-        if [ "$i" -lt "${#list[@]}" ]; then
-          for alias in ${list[*]}; do
-            for changedfile in "${diffstr[*]}"; do
-              if grep -Fxq "$changedfile" "${alias}/aliases"; then
-                run_test "$alias/tasks/main.yml"
-              elif [ "$changedfile" == "main.yml" ]; then
-                echo "changed main.yml, run them later"
-              fi;
-            done;
-          done;
-        fi;
-      done;
-
-      diffmainymlstr=$(git diff $branch remotes/origin/master --name-only  -- 'main.yml' --no-pager);
-      echo start = $start, end = $end, list_lenth = ${#diffmainymlstr[@]};
-      for (( i = $start; i < $end; i++ )); do
-        if [ "$i" -lt "${#diffmainymlstr[@]}" ]; then
-          run_test ${diffmainymlstr[$i]};
-        fi
-      done;
     }
 
 install:
