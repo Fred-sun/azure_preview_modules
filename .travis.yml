@@ -121,9 +121,9 @@ before_install:
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#list[@]}" ]; then
             for alias in ${list[*]}; do
-              echo alias is $alias
+              echo alias is $alias;
               for changedfile in ${diffstr[*]}; do
-                echo changedfile is $changedfile
+                echo changedfile is $changedfile;
                 if grep -Fxq "$changedfile" "${alias}/aliases"; then
                   echo run file $changedfile;
                   break;
