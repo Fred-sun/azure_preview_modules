@@ -89,7 +89,9 @@ before_install:
       end=$((id * number_per_job));
       start=$((end - number_per_job));
 
-      diffstr=$(git diff $branch remotes/origin/master --name-only  -- '*' --no-pager);
+      branch=$TRAVIS_BRANCH;
+      echo branch is $branch;
+      diffstr=$(git diff $branch remotes/origin/master --name-only  -- * --no-pager);
 
       liststr=tests/integration/targets/azure_rm_*;
       list=($liststr);
@@ -97,6 +99,7 @@ before_install:
       run_all=false
  
       for item in ${diffstr[*]}; do
+        echo changed file is $item;
         if [ "$item" -neq "main.yml" ]; then
           if [ "$item" -neq "azure_rm_*" ]; then
             run_all=true;
@@ -123,9 +126,11 @@ before_install:
             for alias in ${list[*]}; do
               echo alias is $alias;
               for changedfile in ${diffstr[*]}; do
-                echo changedfile is $changedfile;
-                if grep -Fxq "$changedfile" "${alias}/aliases"; then
-                  echo run file $changedfile;
+                arrChanged=(${changedfile//// });
+                changedFileName=${arrChanged[-1]};
+                echo changedFileName is $changedFileName;
+                if grep -Fxq "$changedFileName" "${alias}/aliases"; then
+                  echo run file $changedFileName;
                   break;
                 elif [ "$changedfile" == "main.yml" ]; then
                   echo "changed main.yml, run them later";
@@ -144,6 +149,7 @@ install:
   - ansible --version
   - pip install -I -r ./files/requirements-azure.txt
   - pip freeze
+  - git fetch
 
 script:
   - scan_test
