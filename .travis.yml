@@ -149,7 +149,7 @@ install:
   - ansible --version
   - pip install -I -r ./files/requirements-azure.txt
   - pip freeze
-  - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origins/*"
+  - git remote set-branches --add origin master
   - git fetch
 
 script:
