@@ -79,7 +79,6 @@ before_install:
       run_all=false
  
       for item in ${diffstr[*]}; do
-        echo changed file is $item;
         if [[ "$item" != *"main.yml" ]]; then
           if [[ "$item" != *"azure_rm_"*.py ]]; then
             run_all=true;
@@ -106,25 +105,26 @@ before_install:
       else
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#list[@]}" ]; then
-            for alias in ${list[*]}; do
-              for changedfile in ${diffstr[*]}; do
-                arrChanged=(${changedfile//// });
-                changedFileName=${arrChanged[-1]};
-                if [ -d "$changedfile" ]; then
-                  echo run test tests/intergration/targets/${changedFileName}/tasks/main.yml;
-                  run_test tests/intergration/targets/${changedFileName}/tasks/main.yml;
-                  break;
-                elif grep -Fxq "$changedFileName" "${alias}/aliases"; then
-                  echo run test $alias;
-                  run_test ${alias}/tasks/main.yml;
-                  break;
-                elif [ "$changedFileName" == "main.yml" ]; then
-                  echo run test $changedfile;
-                  run_test $changedfile;
-                else
-                  echo not found test for $changedfile;
-                fi
-              done;
+            for changedfile in ${diffstr[*]}; do
+              arrChanged=(${changedfile//// });
+              changedFileName=${arrChanged[-1]};
+              echo changedFileName is $changedFileName;
+              echo changedfile is $changedfile
+              if [ -d "tests/intergration/targets/${changedFileName}" ]; then
+                echo run test tests/intergration/targets/${changedFileName}/tasks/main.yml;
+                run_test tests/intergration/targets/${changedFileName}/tasks/main.yml;
+              elif [ "$changedFileName" == "main.yml" ]; then
+                echo run test $changedfile;
+                run_test $changedfile;
+              else
+                for alias in ${list[*]}; do
+                  if grep -Fxq "$changedFileName" "${alias}/aliases"; then
+                    echo run test $alias;
+                    run_test ${alias}/tasks/main.yml;
+                    break;
+                  fi;
+                done;
+              fi;
             done;
           fi
         done;
