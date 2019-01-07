@@ -93,14 +93,55 @@ before_install:
       end=$((id * number_per_job));
       start=$((end - number_per_job));
 
-      liststr=tests/integration/targets/azure_rm_*/tasks/main.yml;
+      diffstr=$(git diff $branch remotes/origin/master --name-only  -- '*' --no-pager);
+
+      liststr=tests/integration/targets/azure_rm_*;
       list=($liststr);
 
+      run_all=false
+ 
+      for item in ${diffstr[*]}; do
+        if [ "$item" != "main.yml" ]; then
+          if [ "$item" != "azure_rm_*" ]; then
+            run_all=true;
+            break;
+          fi;
+          if [ "$item" == "azure_rm_common*" ]; then
+            run_all=true;
+            break;
+          fi;
+        fi;
+      done;
+
       echo start = $start, end = $end, list_lenth = ${#list[@]};
+      if [ "$run_all" == "true" ]; then
+        for (( i = $start; i < $end; i++ )); do
+          if [ "$i" -lt "${#list[@]}" ]; then
+            run_test ${list[$i]};
+          fi
+        done;
+      fi;
+      return;
 
       for (( i = $start; i < $end; i++ )); do
         if [ "$i" -lt "${#list[@]}" ]; then
-          run_test ${list[$i]};
+          for alias in ${list[*]}; do
+            for changedfile in "${diffstr[*]}"; do
+              if grep -Fxq "$changedfile" "${alias}/aliases"; then
+                run_test "tests/integration/targets/$alias/tasks/main.yml"
+              elif [ "$changedfile" == "main.yml" ]; then
+                echo "changed main.yml, run them later"
+              fi;
+            done;
+          done;
+        fi;
+      done;
+
+      diffmainymlstr=$(git diff $branch remotes/origin/master --name-only  -- 'main.yml' --no-pager);
+      echo start = $start, end = $end, list_lenth = ${#diffmainymlstr[@]};
+      for (( i = $start; i < $end; i++ )); do
+        if [ "$i" -lt "${#diffmainymlstr[@]}" ]; then
+          run_test ${diffmainymlstr[$i]};
         fi
       done;
     }
@@ -120,8 +161,5 @@ script:
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
   email:
-    - yuwzho@microsoft.com
-    - zikalino@microsoft.com
     - yungez@microsoft.com
-    - yaweiw@microsoft.com
 
