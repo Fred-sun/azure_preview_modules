@@ -113,7 +113,7 @@ before_install:
               echo changedFileName is $changedFileName;
               echo changedfile is $changedfile;
 
-              fileNameNoExtension=${changedFileName%.py*}
+              fileNameNoExtension=${changedFileName#*.py}
               if [ -d "tests/intergration/targets/${fileNameNoExtension}" ]; then
                 echo run test tests/intergration/targets/${fileNameNoExtension}/tasks/main.yml;
                 run_test tests/intergration/targets/${fileNameNoExtension}/tasks/main.yml;
