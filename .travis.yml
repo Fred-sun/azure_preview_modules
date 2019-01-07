@@ -118,30 +118,7 @@ before_install:
           fi;
         done;
       else
-        for (( i = $start; i < $end; i++ )); do
-          if [ "$i" -lt "${#list[@]}" ]; then
-            for alias in ${list[*]}; do
-              echo alias is $alias
-              for changedfile in ${diffstr[*]}; do
-                echo changedfile is $changedfile
-                if grep -Fxq "$changedfile" "${alias}/aliases"; then
-                  run_test "$alias/tasks/main.yml";
-                  break;
-                elif [ "$changedfile" == "main.yml" ]; then
-                  echo "changed main.yml, run them later";
-                fi;
-              done;
-            done;
-          fi;
-        done;
-
-        diffmainymlstr=$(git diff $branch remotes/origin/master --name-only  -- 'main.yml' --no-pager);
-        echo start = $start, end = $end, list_lenth = ${#diffmainymlstr[@]};
-        for (( i = $start; i < $end; i++ )); do
-          if [ "$i" -lt "${#diffmainymlstr[@]}" ]; then
-            run_test ${diffmainymlstr[$i]};
-          fi
-        done;
+        echo run_all false, not run test
       fi;
     }
 
