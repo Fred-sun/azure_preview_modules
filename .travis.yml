@@ -104,13 +104,14 @@ before_install:
           elif [ "$item" == "azure_rm_common*" ]; then
             run_all=true;
             break;
-          fi;
-        fi;
+          fi
+        fi
       done;
 
+      echo =============================
       echo run_all is $run_all
       echo start = $start, end = $end, list_lenth = ${#list[@]};
-      if [ "$run_all" == "true" ]; then
+      if [ "$run_all" == true ]; then
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#list[@]}" ]; then
             run_test ${list[$i]};
@@ -120,11 +121,14 @@ before_install:
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#list[@]}" ]; then
             for alias in ${list[*]}; do
-              for changedfile in "${diffstr[*]}"; do
+              echo alias is $alias
+              for changedfile in ${diffstr[*]}; do
+                echo changedfile is $changedfile
                 if grep -Fxq "$changedfile" "${alias}/aliases"; then
-                  run_test "$alias/tasks/main.yml"
+                  run_test "$alias/tasks/main.yml";
+                  break;
                 elif [ "$changedfile" == "main.yml" ]; then
-                  echo "changed main.yml, run them later"
+                  echo "changed main.yml, run them later";
                 fi;
               done;
             done;
