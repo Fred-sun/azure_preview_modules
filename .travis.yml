@@ -116,7 +116,7 @@ before_install:
                 elif [ "$changedfile" == "main.yml" ]; then
                   echo "changed main.yml, run them later";
                 else
-                  echo not found in alias file $changedFileName $alias
+                  echo not found in alias file $changedFileName $alias;
                 fi
               done;
             done;
