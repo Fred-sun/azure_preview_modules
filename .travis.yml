@@ -101,10 +101,10 @@ before_install:
       for item in ${diffstr[*]}; do
         echo changed file is $item;
         if [ "$item" != "*main.yml" ]; then
-          if [ "$item" != "*/azure_rm_*.py" ]; then
+          if [ "$item" != "*azure_rm_*py" ]; then
             run_all=true;
             break;
-          elif [ "$item" == "*/azure_rm_common*.py" ]; then
+          elif [ "$item" == "*azure_rm_common*py" ]; then
             run_all=true;
             break;
           fi
