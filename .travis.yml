@@ -113,6 +113,7 @@ before_install:
         fi;
       done;
 
+      echo run_all is $run_all
       echo start = $start, end = $end, list_lenth = ${#list[@]};
       if [ "$run_all" == "true" ]; then
         for (( i = $start; i < $end; i++ )); do
@@ -128,7 +129,7 @@ before_install:
           for alias in ${list[*]}; do
             for changedfile in "${diffstr[*]}"; do
               if grep -Fxq "$changedfile" "${alias}/aliases"; then
-                run_test "tests/integration/targets/$alias/tasks/main.yml"
+                run_test "$alias/tasks/main.yml"
               elif [ "$changedfile" == "main.yml" ]; then
                 echo "changed main.yml, run them later"
               fi;
