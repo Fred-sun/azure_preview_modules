@@ -103,8 +103,9 @@ before_install:
           fi;
         done;
       else
+        echo start = $start, end = $end, list_lenth = ${#diffstr[@]};
         for (( i = $start; i < $end; i++ )); do
-          if [ "$i" -lt "${#list[@]}" ]; then
+          if [ "$i" -lt "${#diffstr[@]}" ]; then
             for changedfile in ${diffstr[*]}; do
 
               arrChanged=(${changedfile//// });
