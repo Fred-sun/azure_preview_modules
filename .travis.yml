@@ -113,11 +113,13 @@ before_install:
 
       echo =============================
       echo run_all is $run_all;
-      echo start = $start, end = $end, list_lenth = ${#list[@]};
+      listfiles=tests/integration/targets/azure_rm_*/tasks/main.yml;
+      listall=($listfiles);
+      echo start = $start, end = $end, list_lenth = ${#listall[@]};
       if [ "$run_all" == true ]; then
         for (( i = $start; i < $end; i++ )); do
-          if [ "$i" -lt "${#list[@]}" ]; then
-            run_test ${list[$i]};
+          if [ "$i" -lt "${#listall[@]}" ]; then
+            run_test ${listall[$i]};
           fi;
         done;
       else
