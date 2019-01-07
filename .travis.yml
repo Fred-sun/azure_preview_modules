@@ -109,7 +109,7 @@ before_install:
       done;
 
       echo =============================
-      echo run_all is $run_all
+      echo run_all is $run_all;
       echo start = $start, end = $end, list_lenth = ${#list[@]};
       if [ "$run_all" == true ]; then
         for (( i = $start; i < $end; i++ )); do
@@ -118,7 +118,7 @@ before_install:
           fi;
         done;
       else
-        echo run_all false, not run test
+        echo run_all false, not run test;
       fi;
     }
 
