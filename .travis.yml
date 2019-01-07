@@ -110,13 +110,19 @@ before_install:
               for changedfile in ${diffstr[*]}; do
                 arrChanged=(${changedfile//// });
                 changedFileName=${arrChanged[-1]};
-                if grep -Fxq "$changedFileName" "${alias}/aliases"; then
-                  echo run file $changefile;
+                if [ -d "$changedfile" ]; then
+                  echo run test tests/intergration/targets/${changedFileName}/tasks/main.yml;
+                  run_test tests/intergration/targets/${changedFileName}/tasks/main.yml;
                   break;
-                elif [ "$changedfile" == "main.yml" ]; then
-                  echo "changed main.yml, run them later";
+                elif grep -Fxq "$changedFileName" "${alias}/aliases"; then
+                  echo run test $alias;
+                  run_test ${alias}/tasks/main.yml;
+                  break;
+                elif [ "$changedFileName" == "main.yml" ]; then
+                  echo run test $changedfile;
+                  run_test $changedfile;
                 else
-                  echo not found in alias file $changedFileName $alias;
+                  echo not found test for $changedfile;
                 fi
               done;
             done;
