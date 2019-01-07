@@ -125,16 +125,16 @@ before_install:
               for changedfile in ${diffstr[*]}; do
                 echo changedfile is $changedfile
                 if grep -Fxq "$changedfile" "${alias}/aliases"; then
-                  run_test "$alias/tasks/main.yml";
+                  echo run file $changedfile;
                   break;
                 elif [ "$changedfile" == "main.yml" ]; then
                   echo "changed main.yml, run them later";
-                fi;
+                fi
               done;
             done;
-          fi;
+          fi
         done;
-      fi;
+      fi
     }
 
 install:
