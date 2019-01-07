@@ -101,10 +101,10 @@ before_install:
       for item in ${diffstr[*]}; do
         echo changed file is $item;
         if [ "$item" != "*main.yml" ]; then
-          if [ "$item" != "*\azure_rm_*.py" ]; then
+          if [ "$item" != "*/azure_rm_*.py" ]; then
             run_all=true;
             break;
-          elif [ "$item" == "*\azure_rm_common*.py" ]; then
+          elif [ "$item" == "*/azure_rm_common*.py" ]; then
             run_all=true;
             break;
           fi
@@ -113,10 +113,10 @@ before_install:
 
       echo =============================
       echo run_all is $run_all;
-      listfiles=tests/integration/targets/azure_rm_*/tasks/main.yml;
-      listall=($listfiles);
-      echo start = $start, end = $end, list_lenth = ${#listall[@]};
       if [ "$run_all" == true ]; then
+        listfiles=tests/integration/targets/azure_rm_*/tasks/main.yml;
+        listall=($listfiles);
+        echo start = $start, end = $end, list_lenth = ${#listall[@]};
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#listall[@]}" ]; then
             run_test ${listall[$i]};
