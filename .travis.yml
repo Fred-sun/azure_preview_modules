@@ -106,16 +106,20 @@ before_install:
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#list[@]}" ]; then
             for changedfile in ${diffstr[*]}; do
+
               arrChanged=(${changedfile//// });
               changedFileName=${arrChanged[-1]};
               echo changedFileName is $changedFileName;
-              echo changedfile is $changedfile
+              echo changedfile is $changedfile;
+
               if [ -d "tests/intergration/targets/${changedFileName}" ]; then
                 echo run test tests/intergration/targets/${changedFileName}/tasks/main.yml;
                 run_test tests/intergration/targets/${changedFileName}/tasks/main.yml;
+
               elif [ "$changedFileName" == "main.yml" ]; then
                 echo run test $changedfile;
                 run_test $changedfile;
+
               else
                 for alias in ${list[*]}; do
                   if grep -Fxq "$changedFileName" "${alias}/aliases"; then
