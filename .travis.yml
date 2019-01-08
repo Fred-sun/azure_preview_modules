@@ -102,8 +102,7 @@ before_install:
             run_test ${listall[$i]};
           fi;
         done;
-      else
-        echo start = $start, end = $end, list_lenth = ${#diffstr[@]};
+      else        
         testlist=();
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#diffstr[@]}" ]; then
@@ -113,7 +112,7 @@ before_install:
               echo changedFileName is $changedFileName;
               echo changedfile is $changedfile;
 
-              fileNameNoExtension=${changedFileName##.py};
+              fileNameNoExtension=${changedFileName%%.py};
               echo fileNameNoExtension is $fileNameNoExtension;
               if [ -d "tests/intergration/targets/${fileNameNoExtension}" ]; then
                 echo run test tests/intergration/targets/${fileNameNoExtension}/tasks/main.yml;
@@ -132,11 +131,18 @@ before_install:
                 done;
               fi;
             done;
-          fi
+          fi       
         done;
+
         sorted_unique_testList=($(echo "${testList[@]}" | tr ' ' '\n' | sort -u));
-        for test in "${sorted_unique_testList[@]}"; do
-          run_test $test;
+        echo start = $start, end = $end, list_lenth = ${#sorted_unique_testList[@]};
+
+        for (( i = $start; i < $end; i++ )); do
+          if [ "$i" -lt "${#sorted_unique_testList[@]}" ]; then
+            for test in "${sorted_unique_testList[@]}"; do
+              run_test $test;
+            done;
+          fi
         done;
       fi
     }
