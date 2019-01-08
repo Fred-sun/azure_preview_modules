@@ -114,6 +114,7 @@ before_install:
               echo changedfile is $changedfile;
 
               fileNameNoExtension=${changedFileName#.py};
+              echo fileNameNoExtension is $fileNameNoExtension;
               if [ -d "tests/intergration/targets/${fileNameNoExtension}" ]; then
                 echo run test tests/intergration/targets/${fileNameNoExtension}/tasks/main.yml;
                 testlist=("tests/intergration/targets/${fileNameNoExtension}/tasks/main.yml", "${testList[@]}");
