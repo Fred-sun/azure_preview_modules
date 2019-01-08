@@ -102,7 +102,7 @@ before_install:
             run_test ${listall[$i]};
           fi;
         done;
-      else        
+      else
         testlist=();
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#diffstr[@]}" ]; then
@@ -115,7 +115,7 @@ before_install:
               echo fileNameNoExtension is $fileNameNoExtension;
               if [[ -d "tests/integration/targets/${fileNameNoExtension}" ]]; then
                 echo run test tests/integration/targets/${fileNameNoExtension}/tasks/main.yml;
-                testlist=("tests/integration/targets/${fileNameNoExtension}/tasks/main.yml", "${testList[@]}");
+                testlist=("tests/integration/targets/${fileNameNoExtension}/tasks/main.yml" "${testList[@]}");
 
               elif [ "$changedFileName" == "main.yml" ]; then
                 echo run test $changedfile;
@@ -124,25 +124,24 @@ before_install:
                 for alias in ${list[*]}; do
                   if grep -Fxq "$changedFileName" "${alias}/aliases"; then
                     echo run test $alias;
-                    testList=("${alias}/tasks/main.yml", "${testList[@]}");
+                    testList=("${alias}/tasks/main.yml" "${testList[@]}");
                     break;
                   fi;
                 done;
               fi;
             done;
-          fi       
+          fi
         done;
 
         echo testList is $testList;
         echo testList length is ${#testList[@]};
         sorted_unique_testList=($(echo "${testList[@]}" | tr ' ' '\n' | sort -u));
         echo start = $start, end = $end, list_lenth = ${#sorted_unique_testList[@]};
-
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#sorted_unique_testList[@]}" ]; then
             for test in "${sorted_unique_testList[*]}"; do
-              echo test file is $test;
-              run_test $test;
+            echo test file is $test;
+            run_test $test;
             done;
           fi
         done;
