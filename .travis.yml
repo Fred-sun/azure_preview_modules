@@ -134,8 +134,8 @@ before_install:
           fi       
         done;
 
-        echo testList is $testList
-        echo testList length is ${#testList[@]}
+        echo testList is $testList;
+        echo testList length is ${#testList[@]};
         sorted_unique_testList=($(echo "${testList[@]}" | tr ' ' '\n' | sort -u));
         echo start = $start, end = $end, list_lenth = ${#sorted_unique_testList[@]};
 
