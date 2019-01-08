@@ -114,7 +114,7 @@ before_install:
 
               fileNameNoExtension=${changedFileName%%.py};
               echo fileNameNoExtension is $fileNameNoExtension;
-              if [ -d "tests/intergration/targets/${fileNameNoExtension}" ]; then
+              if [[ -d "tests/intergration/targets/${fileNameNoExtension}" ]]; then
                 echo run test tests/intergration/targets/${fileNameNoExtension}/tasks/main.yml;
                 testlist=("tests/intergration/targets/${fileNameNoExtension}/tasks/main.yml", "${testList[@]}");
 
@@ -134,12 +134,14 @@ before_install:
           fi       
         done;
 
+        echo testList is $testList
+        echo testList length is ${#testList[@]}
         sorted_unique_testList=($(echo "${testList[@]}" | tr ' ' '\n' | sort -u));
         echo start = $start, end = $end, list_lenth = ${#sorted_unique_testList[@]};
 
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#sorted_unique_testList[@]}" ]; then
-            for test in "${sorted_unique_testList[@]}"; do
+            for test in "${sorted_unique_testList[*]}"; do
               run_test $test;
             done;
           fi
