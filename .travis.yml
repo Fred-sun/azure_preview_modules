@@ -115,16 +115,12 @@ before_install:
               echo fileNameNoExtension is $fileNameNoExtension;
               if [[ -d "tests/integration/targets/${fileNameNoExtension}" ]]; then
                 echo run test tests/integration/targets/${fileNameNoExtension}/tasks/main.yml;
-                echo before testList length is ${#testList[@]};
                 testList=("tests/integration/targets/${fileNameNoExtension}/tasks/main.yml" "${testList[@]}");
-                echo after testList length is ${#testList[@]};
               elif [ "$changedFileName" == "main.yml" ]; then
                 echo run test $changedfile;
-                echo before testList length is ${#testList[@]};
                 testList=("${changedfile}" "${testList[@]}");
-                echo after testList length is ${#testList[@]};
               else
-                for alias in ${list[*]}; do
+                for alias in "${list[@]}"; do
                   if grep -Fxq "$changedFileName" "${alias}/aliases"; then
                     echo run test $alias;
                     testList=("${alias}/tasks/main.yml" "${testList[@]}");
@@ -141,7 +137,7 @@ before_install:
           echo start = $start, end = $end, list_lenth = ${#sorted_unique_testList[@]};
           for (( i = $start; i < $end; i++ )); do
             if [ "$i" -lt "${#sorted_unique_testList[@]}" ]; then
-              for test in "${sorted_unique_testList[*]}"; do
+              for test in "${sorted_unique_testList[@]}"; do
                 echo test file is $test;
                 run_test $test;
               done;
