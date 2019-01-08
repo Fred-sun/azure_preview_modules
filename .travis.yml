@@ -109,14 +109,13 @@ before_install:
             for changedfile in ${diffstr[*]}; do
               arrChanged=(${changedfile//// });
               changedFileName=${arrChanged[-1]};
-              echo changedFileName is $changedFileName;
               echo changedfile is $changedfile;
 
               fileNameNoExtension=${changedFileName%%.py};
               echo fileNameNoExtension is $fileNameNoExtension;
-              if [[ -d "tests/intergration/targets/${fileNameNoExtension}" ]]; then
-                echo run test tests/intergration/targets/${fileNameNoExtension}/tasks/main.yml;
-                testlist=("tests/intergration/targets/${fileNameNoExtension}/tasks/main.yml", "${testList[@]}");
+              if [[ -d "tests/integration/targets/${fileNameNoExtension}" ]]; then
+                echo run test tests/integration/targets/${fileNameNoExtension}/tasks/main.yml;
+                testlist=("tests/integration/targets/${fileNameNoExtension}/tasks/main.yml", "${testList[@]}");
 
               elif [ "$changedFileName" == "main.yml" ]; then
                 echo run test $changedfile;
@@ -142,6 +141,7 @@ before_install:
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#sorted_unique_testList[@]}" ]; then
             for test in "${sorted_unique_testList[*]}"; do
+              echo test file is $test;
               run_test $test;
             done;
           fi
