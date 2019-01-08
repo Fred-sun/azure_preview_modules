@@ -112,17 +112,16 @@ before_install:
               echo changedfile is $changedfile;
 
               fileNameNoExtension=${changedFileName%%.py};
-              echo fileNameNoExtension is $fileNameNoExtension;
               if [[ -d "tests/integration/targets/${fileNameNoExtension}" ]]; then
-                echo run test tests/integration/targets/${fileNameNoExtension}/tasks/main.yml;
+                echo test tests/integration/targets/${fileNameNoExtension}/tasks/main.yml;
                 testList=("tests/integration/targets/${fileNameNoExtension}/tasks/main.yml" "${testList[@]}");
               elif [ "$changedFileName" == "main.yml" ]; then
-                echo run test $changedfile;
+                echo test $changedfile;
                 testList=("${changedfile}" "${testList[@]}");
               else
                 for alias in "${list[@]}"; do
                   if grep -Fxq "$changedFileName" "${alias}/aliases"; then
-                    echo run test $alias;
+                    echo test $alias;
                     testList=("${alias}/tasks/main.yml" "${testList[@]}");
                     break;
                   fi;
@@ -131,8 +130,6 @@ before_install:
             done;
           fi
 
-          echo testList is $testList;
-          echo testList length is ${#testList[@]};
           sorted_unique_testList=($(echo "${testList[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '));
           echo start = $start, end = $end, list_lenth = ${#sorted_unique_testList[@]};
           for (( i = $start; i < $end; i++ )); do
