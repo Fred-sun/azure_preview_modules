@@ -127,9 +127,7 @@ before_install:
                 for alias in ${list[*]}; do
                   if grep -Fxq "$changedFileName" "${alias}/aliases"; then
                     echo run test $alias;
-                    echo before testList length is ${#testList[@]};
                     testList=("${alias}/tasks/main.yml" "${testList[@]}");
-                    echo after testList length is ${#testList[@]};
                     break;
                   fi;
                 done;
@@ -139,7 +137,7 @@ before_install:
 
           echo testList is $testList;
           echo testList length is ${#testList[@]};
-          sorted_unique_testList=($(echo "${testList[@]}" | tr ' ' '\n' | sort -u));
+          sorted_unique_testList=($(echo "${testList[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '));
           echo start = $start, end = $end, list_lenth = ${#sorted_unique_testList[@]};
           for (( i = $start; i < $end; i++ )); do
             if [ "$i" -lt "${#sorted_unique_testList[@]}" ]; then
