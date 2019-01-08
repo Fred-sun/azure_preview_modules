@@ -104,11 +104,10 @@ before_install:
         done;
       else
         echo start = $start, end = $end, list_lenth = ${#diffstr[@]};
-        testlist=()
+        testlist=();
         for (( i = $start; i < $end; i++ )); do
           if [ "$i" -lt "${#diffstr[@]}" ]; then
             for changedfile in ${diffstr[*]}; do
-
               arrChanged=(${changedfile//// });
               changedFileName=${arrChanged[-1]};
               echo changedFileName is $changedFileName;
@@ -121,8 +120,7 @@ before_install:
 
               elif [ "$changedFileName" == "main.yml" ]; then
                 echo run test $changedfile;
-                testList=("${changedfile}" "${testList[@]}")
-
+                testList=("${changedfile}" "${testList[@]}");
               else
                 for alias in ${list[*]}; do
                   if grep -Fxq "$changedFileName" "${alias}/aliases"; then
